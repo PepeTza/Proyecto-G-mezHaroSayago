@@ -14,14 +14,14 @@ const userSchema = new Schema({
         type: String,
         required: true,
         minlength: 8
-    }
+    },
     username: {
         type: String,
         required: true
     },
     role: {
         type: String,
-        required: true
+        required: true,
         enum: ['ADMIN', 'MANAGER', 'EMPLEADO']
     }
 })

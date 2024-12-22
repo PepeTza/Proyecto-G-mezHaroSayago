@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
+import { User } from './user.js'
 
 const app = express()
 dotenv.config()
@@ -16,9 +17,51 @@ app.listen(port, function() {
     console.log(`Api corriendo en http://localhost:${port} !`)
 })
 
-app.get('/', (req, res) =>{
+app.get('/', (req, res) => {
     console.log('Mi primer endponit')
     res.status(200).send('Hola mundo, mi primera API!')
+})
+
+app.get('/usuarios', async (req, res) => {
+    try{
+        var usuarios = await User.find().exec()
+
+        res.status(200).send({
+            success: true,
+            message: "Se encontraron los usuarios exitosamente",
+            outcome: [usuarios]    
+        })
+    }catch(err){
+        res.status(400).send({
+            success: false,
+            message: "Error al intentar obtener los usuraios, intentelo nuevamente",
+            outcome: []
+        })
+    }
+})
+
+app.post('/', async (req, res) => {
+
+    try{
+        var data = req.body
+        var newUser = new User(data)
+        console.log(newUser)
+        await newUser.save()
+        res.status(200).send({
+
+            success: true,
+            message: "Se registro el usuario",
+            outcome: []
+        })
+    }catch(err){
+
+        res.status(400).send({
+
+            success: false,
+            message: "Error al intentar crear el usuario, por favor intente nuevamente.",
+            outcome: []
+        })
+    }
 })
 
 const connectDB = () => {
