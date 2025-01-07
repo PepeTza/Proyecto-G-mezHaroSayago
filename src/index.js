@@ -94,7 +94,7 @@ app.post('/joke/', async(req, res) => {
         }
        
         const newJoke = new Joke({
-            id: Math.random().toString(36).substring(7),
+            id: Math.floor(Math.random()*1000),
             name,
             author: !author ? 'Se perdió en el Ávila como Led' : author,
             score: score,
@@ -106,7 +106,7 @@ app.post('/joke/', async(req, res) => {
         res.status(200).json({
             mensaje: 'Chiste creado exitosamente',
             chiste: {
-                id: Math.random().toString(36).substring(7),
+                id: Math.floor(Math.random()*1000),
                 name,
                 author: !author ? 'Se perdió en el Ávila como Led' : author,
                 score: score,
@@ -125,6 +125,8 @@ app.put('/joke/:id', async(req, res) => {
         const { id } = req.params
 
         const {
+            name,
+            author,
             score,
             category
         } = req.body
@@ -150,10 +152,10 @@ app.put('/joke/:id', async(req, res) => {
             mensaje: 'Chiste actualizado exitosamente',
             chiste: {
                 id: joke.id,
-                name: joke.name,
-                author: joke.author,
-                score: joke.score,
-                category: joke.category
+                name,
+                author,
+                score,
+                category
             }
         })    
     } catch (error) {
