@@ -70,6 +70,9 @@ app.get('/joke/', async (req, res) => {
 
 /* POST: Crear un nuevo chiste en la BD */
 app.post('/joke/', async(req, res) => {
+    const joke = await Joke.find()
+    const jokeId = joke.length+1
+
     try {
         const {
             name,
@@ -94,7 +97,7 @@ app.post('/joke/', async(req, res) => {
         }
        
         const newJoke = new Joke({
-            id: Math.floor(Math.random()*1000),
+            id: jokeId,
             name,
             author: !author ? 'Se perdió en el Ávila como Led' : author,
             score: score,
@@ -102,23 +105,22 @@ app.post('/joke/', async(req, res) => {
         })
                 
         await newJoke.save()
-    
+
         res.status(200).json({
             mensaje: 'Chiste creado exitosamente',
             chiste: {
-                id: Math.floor(Math.random()*1000),
+                id: jokeId,
                 name,
                 author: !author ? 'Se perdió en el Ávila como Led' : author,
                 score: score,
                 category
             }
-        })    
+        })
     } catch (error) {
         console.error(error)
         res.status(404).send('Ocurrio un error al intentar guardar el chiste')
-    }
+    }
 })
-
 /* PUT: Actualizar un chiste ya existente en la BD */
 app.put('/joke/:id', async(req, res) => {
     try {
