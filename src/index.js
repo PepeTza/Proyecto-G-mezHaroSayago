@@ -260,6 +260,74 @@ app.put('/joke/:id', async(req, res) => {
     }
 })
 
+app.get('/contar/', async (req, res) => {
+   
+    try{
+        
+        const chistes = await Joke.find()
+        let categoria = ""
+
+        if(req.query.category){
+
+            if(req.query.category == "Dad") categoria = "Dad joke"
+            else if(req.query.category == "Humor") categoria = "Humor Negro"
+            else categoria = req.query.category
+        }
+        if(categoria == "Dad joke" || categoria == "Humor Negro" || categoria == "Chistoso" || categoria == "Malo"){
+
+            const chistesFiltrados = chistes.filter((chiste) => chiste.category === categoria);
+            if(chistesFiltrados[0]){
+
+                res.status(200).send({
+
+                    success: true,
+                    message: `Se encontraron ${chistesFiltrados.length} en la categoria: ${categoria}.`,
+                    outcome: chistesFiltrados
+                })
+            }
+            res.status(400).send({
+
+                success: false,
+                message: `Error: No se encontro ningun chiste en la categoria: ${categoria}.`,
+                outcome: []
+            })
+        }
+        else if(categoria !== ""){
+
+            res.status(400).send({
+                success: false,
+                message: "La categoria debe ser Dad, Humor, Chistoso o Malo",
+                outcome: []
+            })
+        }
+        
+        if(chistes[0]){
+
+            res.status(200).send({
+
+                success: true,
+                message: `Se encontraron ${chistes.length} en la categoria: Todos.`,
+                outcome: chistes
+            })
+        }
+        res.status(400).send({
+
+            success: false,
+            message: `Error: No se encontro ningun chiste en la categoria: Todos.`,
+            outcome: []
+        })
+        
+
+    }catch(err){
+
+        res.status(400).send({
+
+            success: false,
+            message: "Error inesperado.",
+            outcome: []
+        })
+    }
+})
 
 app.get('/usuarios', async (req, res) => {
     try{
