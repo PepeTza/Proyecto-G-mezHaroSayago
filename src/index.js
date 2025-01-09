@@ -256,6 +256,60 @@ app.put('/joke/:_id', async(req, res) => {
     }
 })
 
+/* GET: Buscar chiste por ID */
+/**
+ * @swagger
+ * /joke/{_id}:
+ *   get:
+ *     summary: Obtener un chiste por ID
+ *     description: Obtiene un chiste específico de la base de datos usando su ID.
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID del chiste a obtener
+ *     responses:
+ *       200:
+ *         description: Chiste obtenido exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 author:
+ *                   type: string
+ *                 score:
+ *                   type: number
+ *                 category:
+ *                   type: string
+ *       404:
+ *         description: No se encontró el chiste
+ */
+
+app.get('/joke/:_id', async (req, res) => {
+    try {
+        const { _id } = req.params
+        const joke = await Joke.findOne({_id})
+        if(joke) {
+            res.status(200).send(joke)
+        } else {
+            res.status(404).send('No se encontro el chiste')
+        }
+    } catch (error) {
+        console.error(error)
+        res.status(404).send('No se encontro el chiste')
+    }
+})
+
+
+
+
 app.get('/contar/', async (req, res) => {
    
     try{
