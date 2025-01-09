@@ -255,7 +255,8 @@ app.put('/joke/:_id', async(req, res) => {
         res.status(404).send('No existe el chiste con ese id, intente con otro')
     }
 })
-app.delete('/joke/:id', async (req, res) => {
+
+app.delete('/joke/id:', async (req, res) => {
 
     try {
         const { id } = req.params
