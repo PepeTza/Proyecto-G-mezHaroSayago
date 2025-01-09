@@ -129,8 +129,6 @@ app.get('/joke/', async (req, res) => {
  */
 
 app.post('/joke/', async(req, res) => {
-    const joke = await Joke.find()
-    const jokeId = joke.length+1
 
     try {
         const {
@@ -156,19 +154,17 @@ app.post('/joke/', async(req, res) => {
         }
        
         const newJoke = new Joke({
-            id: jokeId,
             name,
             author: !author ? 'Se perdió en el Ávila como Led' : author,
             score: score,
             category
         })
-                
+        
         await newJoke.save()
 
         res.status(200).json({
             mensaje: 'Chiste creado exitosamente',
             chiste: {
-                id: jokeId,
                 name,
                 author: !author ? 'Se perdió en el Ávila como Led' : author,
                 score: score,
@@ -216,10 +212,10 @@ app.post('/joke/', async(req, res) => {
  *         description: No existe el chiste con ese id, intente con otro
  */
 
-app.put('/joke/:id', async(req, res) => {
+app.put('/joke/:_id', async(req, res) => {
     try {
-        const { id } = req.params
-
+        const { _id } = req.params
+        console.log(_id)
         const {
             name,
             author,
@@ -242,12 +238,12 @@ app.put('/joke/:id', async(req, res) => {
             return
         }
 
-        const joke = await Joke.findOneAndUpdate({id}, {$set: req.body}, {new: false})
-        
+        const joke = await Joke.findOneAndUpdate({_id}, {$set: req.body}, {new: false})
+        console.log(joke)
         res.status(200).json({
             mensaje: 'Chiste actualizado exitosamente',
             chiste: {
-                id: joke.id,
+                id: joke._id,
                 name,
                 author,
                 score,
