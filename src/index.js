@@ -329,6 +329,8 @@ app.get('/joke/:_id', async (req, res) => {
     }
 })
 
+
+
 app.get('/contar/', async (req, res) => {
    
     try{
@@ -397,6 +399,46 @@ app.get('/contar/', async (req, res) => {
         })
     }
 })
+
+app.get('/score/', async (req, res) => {
+
+    try {
+        const { score } = req.query;
+
+        if (!score) {
+            return res.status(400).send({
+                success: false,
+                message: 'Error: Debe proporcionar un puntaje.',
+                outcome: []
+            });
+        }
+
+        const chistes = await Joke.find(); 
+
+        const chistesFiltrados = chistes.filter(chiste => chiste.score == score);
+
+        if (chistesFiltrados.length === 0) {
+            return res.status(404).send({
+                success: false,
+                message: `Error: No se encontró ningún chiste con el puntaje: ${score}.`,
+                outcome: []
+            });
+        }
+
+        res.status(200).send({
+            success: true,
+            message: `Se encontraron ${chistesFiltrados.length} chistes con el puntaje: ${score}.`,
+            outcome: chistesFiltrados
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            success: false,
+            message: 'Error del servidor.',
+            outcome: []
+        });
+    }
+});
 
 app.get('/usuarios', async (req, res) => {
     try{
