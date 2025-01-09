@@ -260,6 +260,29 @@ app.put('/joke/:id', async(req, res) => {
     }
 })
 
+app.delete('/joke/:id', async (req, res) => {
+
+    try {
+        const { id } = req.params
+
+        await Joke.deleteOne({ _id: id })
+        
+        res.status(200).json({
+            success: true,
+            mensaje: 'Chiste eliminado exitosamente',
+            outcome: []
+        })    
+    } catch (error) {
+        console.error(error)
+        res.status(400).send({
+
+            success: false,
+            message: `Error: No existe chiste con el id: ${id}.`,
+            outcome: []
+        })
+    }
+})
+
 app.get('/contar/', async (req, res) => {
    
     try{
